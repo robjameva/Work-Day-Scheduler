@@ -4,38 +4,50 @@ var now = moment().hour();
 
 
 // Display today's date on the top of the screen
-$("#currentDay").text(today)
+var setCurrentDay = function() {
+    $("#currentDay").text(today)
+}
 
-var checkTime = function(taskEl) {
-    var timeEl = taskEl.find("div")[1];
-    var timeNum = parseInt($(timeEl).attr("id"));
+var setBackGroundColor = function(taskEl) {
+    var time = parseInt($(taskEl).attr("id"));
 
-    if (timeNum > now) {
-        $(timeEl).removeClass("bg-danger");
-        $(timeEl).removeClass("bg-secondary");
-        $(timeEl).addClass("bg-success");
+    $(taskEl).removeClass("past");
+    $(taskEl).removeClass("present");
+    $(taskEl).removeClass("future");
+
+    if (time > now) {
+        $(taskEl).addClass("future");
     }
-    else if (timeNum == now) {
-        $(timeEl).removeClass("bg-success");
-        $(timeEl).removeClass("bg-secondary");
-        $(timeEl).addClass("bg-danger");
+    else if (time == now) {
+        $(taskEl).addClass("present");
     }
     else {
-        $(timeEl).removeClass("bg-success");
-        $(timeEl).removeClass("bg-danger");
-        $(timeEl).addClass("bg-secondary");
+        $(taskEl).addClass("past");
     }
 }
 
 // Check time to dynamically chnage background color
-setInterval(function() {
-    $(".row").each(function(index) {
-        checkTime($(this))
+var taskAudit = function() {
+    setInterval(function() {
+        $(".task-text-container").each(function(index) {
+            setBackGroundColor($(this))
+        });
+    }, (1000 * 60));
+}
+
+var checkEachRow = function() {
+    $(".task-text-container").each(function(index) {
+        setBackGroundColor($(this))
     });
-}, (1000 * 60));
+}
 
-$(".row").each(function(index) {
-    checkTime($(this))
-});
+$(".task-text-container").on("click", "p", function() {
+    var text = $(this).text().trim();
+    var textInput = $("<textarea>").addClass("form-control").val(text);
+    $(this).replaceWith(textInput);
+    textInput.trigger("focus");
+})
 
-
+setCurrentDay();
+checkEachRow();
+taskAudit();
