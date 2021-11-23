@@ -52,19 +52,20 @@ var setBackGroundColor = function(taskEl) {
     }
 }
 
-// Check time to dynamically chnage background color
+// Updated background color every minute
 var taskAudit = function() {
     setInterval(function() {
-        checkEachRow();
-    }, (1000 * 60));
+        $(".task-text-container").each(function(index) {
+            setBackGroundColor($(this))
+        });
+    }, (1000 * 10));
 }
 
 // Checks each time slot and calls setBackgroundColor to set the color according to the time of day
-var checkEachRow = function() {
-    $(".task-text-container").each(function(index) {
-        setBackGroundColor($(this))
-    });
-}
+$(".task-text-container").each(function(index) {
+    setBackGroundColor($(this))
+});
+
 
 // Allow user to enter text on screen
 $(".task-text-container").on("click", "p", function() {
@@ -89,5 +90,4 @@ $(".saveBtn").on("click", function() {
 })
 
 setCurrentDay();
-checkEachRow();
 taskAudit();
